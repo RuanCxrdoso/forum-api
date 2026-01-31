@@ -1,4 +1,4 @@
-import type { Answer } from '../../entities/answer.js'
+import type { Answer } from '../../forum/enterprise/entities/answer.js'
 import type { AnswersRepository } from '../answers-repository.js'
 
 export class InMemoryAnswersRepository implements AnswersRepository {
