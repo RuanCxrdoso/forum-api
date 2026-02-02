@@ -3,7 +3,7 @@ import { Instructor } from '../../enterprise/entities/instructor.js'
 import { Student } from '../../enterprise/entities/student.js'
 import { Question } from '../../enterprise/entities/question.js'
 import { AnswerQuestionUseCase } from './answer-question.js'
-import { InMemoryAnswersRepository } from '../../../repositories/in-memory-repositories/in-memory-answers-repository.js'
+import { InMemoryAnswersRepository } from '../../../../../test/repositories/in-memory-answers-repository.js'
 import { Slug } from '../../enterprise/entities/value-objects/slug.js'
 
 let answerRepository: InMemoryAnswersRepository

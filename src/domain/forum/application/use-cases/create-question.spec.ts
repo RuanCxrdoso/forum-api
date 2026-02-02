@@ -1,14 +1,14 @@
-import { InMemoryQuestionRepository } from '@/domain/repositories/in-memory-repositories/in-memory-question-repository.js'
+import { InMemoryQuestionRepository } from '../../../../../test/repositories/in-memory-question-repository.js'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { CreateQuestionUseCase } from './create-question.js'
 
 let questionRepository: InMemoryQuestionRepository
-let createQuestionUseCase: CreateQuestionUseCase
+let sut: CreateQuestionUseCase
 
 describe('Create question test', () => {
   beforeEach(() => {
     questionRepository = new InMemoryQuestionRepository()
-    createQuestionUseCase = new CreateQuestionUseCase(questionRepository)
+    sut = new CreateQuestionUseCase(questionRepository)
   })
 
   it('should be able do crate a question', async () => {
@@ -18,7 +18,7 @@ describe('Create question test', () => {
       content: 'Precio saber como resolver integrais.',
     }
 
-    const { question } = await createQuestionUseCase.execute(fakeQuestion)
+    const { question } = await sut.execute(fakeQuestion)
 
     expect(question.id).toBeTruthy()
     expect(question).toEqual(
