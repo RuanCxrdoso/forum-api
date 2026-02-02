@@ -1,5 +1,5 @@
+import type { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository.js'
 import type { Answer } from '../../forum/enterprise/entities/answer.js'
-import type { AnswersRepository } from '../answers-repository.js'
 
 export class InMemoryAnswersRepository implements AnswersRepository {
   public answers: Answer[] = []
@@ -11,7 +11,9 @@ export class InMemoryAnswersRepository implements AnswersRepository {
   }
 
   async get(answerId: string) {
-    const answer = this.answers.find((answer) => answer.id === answerId)
+    const answer = this.answers.find(
+      (answer) => answer.id.toString() === answerId,
+    )
 
     if (!answer) return null
 
