@@ -1,6 +1,7 @@
 import type { Answer } from '../../enterprise/entities/answer.js'
 
-export interface AnswersRepository {
+export interface IAnswersRepository {
   create: (answer: Answer) => Promise<void>
-  get: (answerId: string) => Promise<Answer | null>
+  delete: (answer: Answer) => Promise<void>
+  findById: (answerId: string) => Promise<Answer | null>
 }
