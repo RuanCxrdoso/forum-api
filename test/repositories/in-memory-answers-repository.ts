@@ -10,6 +10,24 @@ export class InMemoryAnswersRepository implements IAnswersRepository {
     return
   }
 
+  async save(answer: Answer) {
+    const findIndex = this.answers.findIndex(
+      (item) => item.id.toString() === answer.id.toString(),
+    )
+
+    this.answers[findIndex] = answer
+
+    return
+  }
+
+  async delete(answer: Answer) {
+    const answerIndex = this.answers.findIndex((item) => item.id === answer.id)
+
+    this.answers.splice(answerIndex, 1)
+
+    return
+  }
+
   async findById(answerId: string) {
     const answer = this.answers.find(
       (answer) => answer.id.toString() === answerId,
@@ -18,11 +36,5 @@ export class InMemoryAnswersRepository implements IAnswersRepository {
     if (!answer) return null
 
     return answer
-  }
-
-  async delete(answer: Answer) {
-    const answerIndex = this.answers.findIndex((item) => item.id === answer.id)
-
-    this.answers.splice(answerIndex, 1)
   }
 }
