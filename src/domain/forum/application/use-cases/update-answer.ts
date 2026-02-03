@@ -1,3 +1,4 @@
+import type { Answer } from '../../enterprise/entities/answer.js'
 import type { IAnswersRepository } from '../repositories/answers-repository.js'
 
 interface UpdateAnswerUseCaseRequest {
@@ -6,10 +7,18 @@ interface UpdateAnswerUseCaseRequest {
   content: string
 }
 
+interface UpdateAnswerUseCaseResponse {
+  answer: Answer
+}
+
 export class UpdateAnswerUseCase {
   constructor(private answerRepository: IAnswersRepository) {}
 
-  async execute({ authorId, answerId, content }: UpdateAnswerUseCaseRequest) {
+  async execute({
+    authorId,
+    answerId,
+    content,
+  }: UpdateAnswerUseCaseRequest): Promise<UpdateAnswerUseCaseResponse> {
     const answer = await this.answerRepository.findById(answerId)
 
     if (!answer) {
@@ -24,6 +33,8 @@ export class UpdateAnswerUseCase {
 
     await this.answerRepository.save(answer)
 
-    return {}
+    return {
+      answer,
+    }
   }
 }

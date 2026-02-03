@@ -1,10 +1,15 @@
 import type { InMemoryQuestionRepository } from '../../../../../test/repositories/in-memory-question-repository.js'
+import type { Question } from '../../enterprise/entities/question.js'
 
 interface UpdateQuestionUseCaseRequest {
   authorId: string
   questionId: string
   title: string
   content: string
+}
+
+interface UpdateQuestionUseCaseResponse {
+  question: Question
 }
 
 export class UpdateQuestionUseCase {
@@ -15,7 +20,7 @@ export class UpdateQuestionUseCase {
     questionId,
     title,
     content,
-  }: UpdateQuestionUseCaseRequest) {
+  }: UpdateQuestionUseCaseRequest): Promise<UpdateQuestionUseCaseResponse> {
     const question = await this.questionRepository.findById(questionId)
 
     if (!question) {
@@ -29,6 +34,8 @@ export class UpdateQuestionUseCase {
     question.title = title
     question.content = content
 
-    return {}
+    return {
+      question,
+    }
   }
 }
