@@ -1,4 +1,7 @@
-import type { IAnswersRepository } from '@/domain/forum/application/repositories/answers-repository.js'
+import type {
+  FindManyByQuestionIdProps,
+  IAnswersRepository,
+} from '@/domain/forum/application/repositories/answers-repository.js'
 import type { Answer } from '../../src/domain/forum/enterprise/entities/answer.js'
 
 export class InMemoryAnswersRepository implements IAnswersRepository {
@@ -36,5 +39,13 @@ export class InMemoryAnswersRepository implements IAnswersRepository {
     if (!answer) return null
 
     return answer
+  }
+
+  async findManyByQuestionId({ id, page }: FindManyByQuestionIdProps) {
+    const answers = this.answers
+      .filter((answer) => answer.questionId.toString() === id)
+      .slice((page - 1) * 20, page * 20)
+
+    return answers
   }
 }
