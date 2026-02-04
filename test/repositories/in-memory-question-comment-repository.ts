@@ -9,4 +9,24 @@ export class InMemoryQuestionCommentRepository implements IQuestionCommentReposi
 
     return questionComment
   }
+
+  async delete(questionComment: QuestionComment) {
+    const questionCommentIndex = this.questionComments.findIndex(
+      (item) => item.id.toString() === questionComment.id.toString(),
+    )
+
+    this.questionComments.splice(questionCommentIndex, 1)
+
+    return
+  }
+
+  async findById(questionCommentId: string) {
+    const questionComment = this.questionComments.find(
+      (item) => item.id.toString() === questionCommentId,
+    )
+
+    if (!questionComment) return null
+
+    return questionComment
+  }
 }
