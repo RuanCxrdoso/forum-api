@@ -1,0 +1,57 @@
+import type { PaginationParams } from '@/core/repositories/pagination-params.js'
+import type { IQuestionRepository } from '@/domain/forum/application/repositories/question-repository.js'
+import { Question } from '@/domain/forum/enterprise/entities/question.js'
+
+export class InMemoryQuestionRepository implements IQuestionRepository {
+  public questions: Question[] = []
+
+  async create(question: Question) {
+    this.questions.push(question)
+
+    return question
+  }
+
+  async delete(question: Question) {
+    this.questions = this.questions.filter(
+      (questionItem) => questionItem.id !== question.id,
+    )
+  }
+
+  async save(question: Question) {
+    const questionIndex = this.questions.findIndex(
+      (item) => item.id.toString() === question.id.toString(),
+    )
+
+    this.questions[questionIndex] = question
+  }
+
+  async findBySlug(slug: string) {
+    const question = this.questions.find(
+      (question) => question.slug.value === slug,
+    )
+
+    if (!question) return null
+
+    return question
+  }
+
+  async findById(id: string) {
+    const question = this.questions.find(
+      (question) => question.id.toString() === id,
+    )
+
+    if (!question) return null
+
+    return question
+  }
+
+  async findManyRecent({ page }: PaginationParams) {
+    const questions = this.questions
+      .sort((a, b) => {
+        return b.createdAt.getTime() - a.createdAt.getTime()
+      })
+      .slice((page - 1) * 20, page * 20)
+
+    return questions
+  }
+}

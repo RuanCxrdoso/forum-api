@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { Instructor } from '../entities/instructor.js'
-import { Student } from '../entities/student.js'
-import { Question } from '../entities/question.js'
+import { Instructor } from '../../enterprise/entities/instructor.js'
+import { Student } from '../../enterprise/entities/student.js'
+import { Question } from '../../enterprise/entities/question.js'
 import { AnswerQuestionUseCase } from './answer-question.js'
-import { InMemoryAnswersRepository } from '../repositories/in-memory-repositories/in-memory-answers-repository.js'
-import { Slug } from '../entities/value-objects/slug.js'
+import { InMemoryAnswersRepository } from '../../../../../test/repositories/in-memory-answers-repository.js'
+import { Slug } from '../../enterprise/entities/value-objects/slug.js'
 
 let answerRepository: InMemoryAnswersRepository
 
