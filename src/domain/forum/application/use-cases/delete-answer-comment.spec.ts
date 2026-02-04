@@ -1,0 +1,43 @@
+import { beforeEach, describe, expect, it } from 'vitest'
+import { InMemoryAnswerCommentRepository } from '../../../../../test/repositories/in-memory-answer-comment-repository.js'
+import { DeleteAnswerCommentUseCase } from './delete-answer-comment.js'
+import { UniqueEntityId } from '@/core/entities/unique-entity-id.js'
+import { makeAnswerComment } from '../../../../../test/factories/make-answer-comment.js'
+
+let answerCommentRespository: InMemoryAnswerCommentRepository
+let sut: DeleteAnswerCommentUseCase
+
+describe('Delete answer comment use case tests', () => {
+  beforeEach(() => {
+    answerCommentRespository = new InMemoryAnswerCommentRepository()
+    sut = new DeleteAnswerCommentUseCase(answerCommentRespository)
+  })
+
+  it('should be able to delete a comment on a answer', async () => {
+    const newAnswerComment = makeAnswerComment()
+
+    await answerCommentRespository.create(newAnswerComment)
+
+    await sut.execute({
+      authorId: newAnswerComment.authorId.toString(),
+      answerCommentId: newAnswerComment.id.toString(),
+    })
+
+    expect(answerCommentRespository.answerComments).toHaveLength(0)
+  })
+
+  it('shouldnt be able to delete a comment from another user', async () => {
+    const newAnswerComment = makeAnswerComment({
+      authorId: new UniqueEntityId('author-1'),
+    })
+
+    await answerCommentRespository.create(newAnswerComment)
+
+    await expect(() =>
+      sut.execute({
+        authorId: 'author-2',
+        answerCommentId: newAnswerComment.id.toString(),
+      }),
+    ).rejects.toBeInstanceOf(Error)
+  })
+})
