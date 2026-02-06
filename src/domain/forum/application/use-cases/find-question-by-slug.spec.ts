@@ -17,10 +17,10 @@ describe('Find Question By Slug Use Case test', () => {
 
     await questionRepository.create(fakeQuestion)
 
-    const { question } = await sut.execute({ slug: fakeQuestion.slug.value })
+    await sut.execute({ slug: fakeQuestion.slug.value })
 
-    expect(question.id).toBeTruthy()
-    expect(question).toEqual(
+    expect(questionRepository.questions[0]?.id).toBeTruthy()
+    expect(questionRepository.questions[0]).toEqual(
       expect.objectContaining({
         title: fakeQuestion.title,
         content: fakeQuestion.content,

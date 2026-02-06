@@ -1,7 +1,7 @@
-import { right, type Either } from '@/core/either.js'
+import { left, right, type Either } from '@/core/either.js'
 import type { IAnswersRepository } from '../repositories/answers-repository.js'
-import type { NotAllowedError } from './errors/not-allowed-error.js'
-import type { ResourceNotFoundError } from './errors/resource-not-found-error.js'
+import { NotAllowedError } from './errors/not-allowed-error.js'
+import { ResourceNotFoundError } from './errors/resource-not-found-error.js'
 
 interface DeleteAnswerUseCaseRequest {
   authorId: string
@@ -23,11 +23,11 @@ export class DeleteAnswerUseCase {
     const answer = await this.answerRepository.findById(answerId)
 
     if (!answer) {
-      throw new Error('Resources not found.')
+      return left(new ResourceNotFoundError())
     }
 
     if (authorId !== answer.authorId.toString()) {
-      throw new Error('Unauthorized.')
+      return left(new NotAllowedError())
     }
 
     await this.answerRepository.delete(answer)

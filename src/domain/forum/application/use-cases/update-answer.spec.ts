@@ -3,14 +3,15 @@ import { InMemoryAnswersRepository } from '../../../../../test/repositories/in-m
 import { UpdateAnswerUseCase } from './update-answer.js'
 import { makeAnswer } from '../../../../../test/factories/make-answer.js'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id.js'
+import { NotAllowedError } from './errors/not-allowed-error.js'
 
 let answerRepository: InMemoryAnswersRepository
-let updateAnswerUseCase: UpdateAnswerUseCase
+let sut: UpdateAnswerUseCase
 
 describe('Update answer use case tests', () => {
   beforeEach(() => {
     answerRepository = new InMemoryAnswersRepository()
-    updateAnswerUseCase = new UpdateAnswerUseCase(answerRepository)
+    sut = new UpdateAnswerUseCase(answerRepository)
   })
 
   it('should be able to update a answer', async () => {
@@ -21,7 +22,7 @@ describe('Update answer use case tests', () => {
 
     await answerRepository.create(answer)
 
-    await updateAnswerUseCase.execute({
+    await sut.execute({
       authorId: 'author-1',
       answerId: 'answer-1',
       content: 'Novo content.',
@@ -40,12 +41,13 @@ describe('Update answer use case tests', () => {
 
     await answerRepository.create(answer)
 
-    await expect(() =>
-      updateAnswerUseCase.execute({
-        authorId: 'author-2',
-        answerId: 'answer-1',
-        content: 'Novo content.',
-      }),
-    ).rejects.toBeInstanceOf(Error)
+    const result = await sut.execute({
+      authorId: 'author-2',
+      answerId: 'answer-1',
+      content: 'Novo content.',
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
   })
 })

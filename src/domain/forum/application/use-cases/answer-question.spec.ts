@@ -26,12 +26,13 @@ describe('Answer question tests', () => {
 
     const answerQuestionUseCase = new AnswerQuestionUseCase(answerRepository)
 
-    const { answer: answerResponse } = await answerQuestionUseCase.execute({
+    const result = await answerQuestionUseCase.execute({
       instructorId: instructor.id,
       questionId: question.id,
       content: 'Faça triceps pulley!',
     })
 
-    expect(answerResponse.content).toEqual('Faça triceps pulley!')
+    expect(result.isRight()).toBe(true)
+    expect(answerRepository.answers[0]?.id).toEqual(result.value?.answer.id)
   })
 })

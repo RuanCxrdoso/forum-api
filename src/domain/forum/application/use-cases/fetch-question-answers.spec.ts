@@ -32,13 +32,13 @@ describe('Fetch question answers use-case test', () => {
     await answerRepository.create(fakeAnswer2)
     await answerRepository.create(fakeAnswer3)
 
-    const { answers } = await sut.execute({
+    const result = await sut.execute({
       questionId: fakeQuestion.id.toString(),
       page: 1,
     })
 
-    expect(answers).toHaveLength(3)
-    expect(answers).toEqual([
+    expect(result.value?.answers).toHaveLength(3)
+    expect(result.value?.answers).toEqual([
       expect.objectContaining({ questionId: fakeQuestion.id }),
       expect.objectContaining({ questionId: fakeQuestion.id }),
       expect.objectContaining({ questionId: fakeQuestion.id }),
@@ -54,16 +54,16 @@ describe('Fetch question answers use-case test', () => {
       await answerRepository.create(fakeAnswer)
     }
 
-    const { answers: firstAnswersPage } = await sut.execute({
+    const firstAnswersPage = await sut.execute({
       questionId: fakeQuestion.id.toString(),
       page: 1,
     })
-    const { answers: secondAnswersPage } = await sut.execute({
+    const secondAnswersPage = await sut.execute({
       questionId: fakeQuestion.id.toString(),
       page: 2,
     })
 
-    expect(firstAnswersPage).toHaveLength(20)
-    expect(secondAnswersPage).toHaveLength(2)
+    expect(firstAnswersPage.value?.answers).toHaveLength(20)
+    expect(secondAnswersPage.value?.answers).toHaveLength(2)
   })
 })

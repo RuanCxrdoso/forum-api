@@ -16,17 +16,17 @@ describe('Comment on answer tests', () => {
   })
 
   it('should be able to comment on a answer', async () => {
-    const newAnswer = makeAnswer()
+    const newAnswer = makeAnswer({ content: 'Comentário teste' })
     await answerRepository.create(newAnswer)
 
-    const { answerComment } = await sut.execute({
+    await sut.execute({
       authorId: newAnswer.authorId.toString(),
       answerId: newAnswer.id.toString(),
       content: newAnswer.content,
     })
 
     expect(answerCommentsRepository.answerComments[0]?.content).toEqual(
-      answerComment.content,
+      'Comentário teste',
     )
   })
 })
