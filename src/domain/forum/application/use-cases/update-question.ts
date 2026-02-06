@@ -1,5 +1,8 @@
+import { left, right, type Either } from '@/core/either.js'
 import type { InMemoryQuestionRepository } from '../../../../../test/repositories/in-memory-question-repository.js'
 import type { Question } from '../../enterprise/entities/question.js'
+import { ResourceNotFoundError } from './errors/resource-not-found-error.js'
+import { NotAllowedError } from './errors/not-allowed-error.js'
 
 interface UpdateQuestionUseCaseRequest {
   authorId: string
@@ -8,9 +11,12 @@ interface UpdateQuestionUseCaseRequest {
   content: string
 }
 
-interface UpdateQuestionUseCaseResponse {
-  question: Question
-}
+type UpdateQuestionUseCaseResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  {
+    question: Question
+  }
+>
 
 export class UpdateQuestionUseCase {
   constructor(private questionRepository: InMemoryQuestionRepository) {}
@@ -24,18 +30,18 @@ export class UpdateQuestionUseCase {
     const question = await this.questionRepository.findById(questionId)
 
     if (!question) {
-      throw new Error('Question not found.')
+      return left(new ResourceNotFoundError())
     }
 
     if (question.authorId.toString() !== authorId) {
-      throw new Error('Unauthorized.')
+      return left(new NotAllowedError())
     }
 
     question.title = title
     question.content = content
 
-    return {
+    return right({
       question,
-    }
+    })
   }
 }
