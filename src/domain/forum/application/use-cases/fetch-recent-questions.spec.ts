@@ -21,10 +21,10 @@ describe('Fetch recents questions use-case test', () => {
     await questionRepository.create(fakeQuestion2)
     await questionRepository.create(fakeQuestion3)
 
-    const { questions } = await sut.execute({ page: 1 })
+    const questions = await sut.execute({ page: 1 })
 
-    expect(questions).toHaveLength(3)
-    expect(questions).toEqual([
+    expect(questions.value?.questions).toHaveLength(3)
+    expect(questions.value?.questions).toEqual([
       expect.objectContaining({ createdAt: new Date(2026, 0, 12) }),
       expect.objectContaining({ createdAt: new Date(2026, 0, 11) }),
       expect.objectContaining({ createdAt: new Date(2026, 0, 10) }),
@@ -38,10 +38,10 @@ describe('Fetch recents questions use-case test', () => {
       await questionRepository.create(fakeQuestion)
     }
 
-    const { questions: firstQuestionsPage } = await sut.execute({ page: 1 })
-    const { questions: secondQuestionsPage } = await sut.execute({ page: 2 })
+    const firstQuestionsPage = await sut.execute({ page: 1 })
+    const secondQuestionsPage = await sut.execute({ page: 2 })
 
-    expect(firstQuestionsPage).toHaveLength(20)
-    expect(secondQuestionsPage).toHaveLength(2)
+    expect(firstQuestionsPage.value?.questions).toHaveLength(20)
+    expect(secondQuestionsPage.value?.questions).toHaveLength(2)
   })
 })

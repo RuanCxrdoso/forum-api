@@ -32,13 +32,13 @@ describe('Fetch question comments use-case test', () => {
     await questionCommentsRepository.create(fakeQuestionComment2)
     await questionCommentsRepository.create(fakeQuestionComment3)
 
-    const { questionComments } = await sut.execute({
+    const questionComments = await sut.execute({
       questionId: fakeQuestion.id.toString(),
       page: 1,
     })
 
-    expect(questionComments).toHaveLength(3)
-    expect(questionComments).toEqual([
+    expect(questionComments.value?.questionComments).toHaveLength(3)
+    expect(questionComments.value?.questionComments).toEqual([
       expect.objectContaining({ questionId: fakeQuestion.id }),
       expect.objectContaining({ questionId: fakeQuestion.id }),
       expect.objectContaining({ questionId: fakeQuestion.id }),
@@ -56,16 +56,16 @@ describe('Fetch question comments use-case test', () => {
       await questionCommentsRepository.create(fakeQuestionComment)
     }
 
-    const { questionComments: firstQuestionCommentsPage } = await sut.execute({
+    const firstQuestionCommentsPage = await sut.execute({
       questionId: fakeQuestion.id.toString(),
       page: 1,
     })
-    const { questionComments: secondQuestionCommentsPage } = await sut.execute({
+    const secondQuestionCommentsPage = await sut.execute({
       questionId: fakeQuestion.id.toString(),
       page: 2,
     })
 
-    expect(firstQuestionCommentsPage).toHaveLength(20)
-    expect(secondQuestionCommentsPage).toHaveLength(2)
+    expect(firstQuestionCommentsPage.value?.questionComments).toHaveLength(20)
+    expect(secondQuestionCommentsPage.value?.questionComments).toHaveLength(2)
   })
 })

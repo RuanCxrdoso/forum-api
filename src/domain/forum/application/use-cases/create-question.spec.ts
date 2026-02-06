@@ -11,17 +11,17 @@ describe('Create question test', () => {
     sut = new CreateQuestionUseCase(questionRepository)
   })
 
-  it('should be able do crate a question', async () => {
+  it('should be able to create a question', async () => {
     const fakeQuestion = {
       authorId: 'author-1',
       title: 'Como resolver integrais',
       content: 'Precio saber como resolver integrais.',
     }
 
-    const { question } = await sut.execute(fakeQuestion)
+    await sut.execute(fakeQuestion)
 
-    expect(question.id).toBeTruthy()
-    expect(question).toEqual(
+    expect(questionRepository.questions[0]?.id).toBeTruthy()
+    expect(questionRepository.questions[0]).toEqual(
       expect.objectContaining({
         title: 'Como resolver integrais',
         content: 'Precio saber como resolver integrais.',

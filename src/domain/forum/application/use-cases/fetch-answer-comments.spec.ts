@@ -32,13 +32,13 @@ describe('Fetch answer comments use-case test', () => {
     await answerCommentsRepository.create(fakeAnswerComment2)
     await answerCommentsRepository.create(fakeAnswerComment3)
 
-    const { answerComments } = await sut.execute({
+    await sut.execute({
       answerId: fakeAnswer.id.toString(),
       page: 1,
     })
 
-    expect(answerComments).toHaveLength(3)
-    expect(answerComments).toEqual([
+    expect(answerCommentsRepository.answerComments).toHaveLength(3)
+    expect(answerCommentsRepository.answerComments).toEqual([
       expect.objectContaining({ answerId: fakeAnswer.id }),
       expect.objectContaining({ answerId: fakeAnswer.id }),
       expect.objectContaining({ answerId: fakeAnswer.id }),
@@ -56,16 +56,16 @@ describe('Fetch answer comments use-case test', () => {
       await answerCommentsRepository.create(fakeAnswerComment)
     }
 
-    const { answerComments: firstAnswerCommentsPage } = await sut.execute({
+    const firstAnswerCommentsPage = await sut.execute({
       answerId: fakeAnswer.id.toString(),
       page: 1,
     })
-    const { answerComments: secondAnswerCommentsPage } = await sut.execute({
+    const secondAnswerCommentsPage = await sut.execute({
       answerId: fakeAnswer.id.toString(),
       page: 2,
     })
 
-    expect(firstAnswerCommentsPage).toHaveLength(20)
-    expect(secondAnswerCommentsPage).toHaveLength(2)
+    expect(firstAnswerCommentsPage.value?.answerComments).toHaveLength(20)
+    expect(secondAnswerCommentsPage.value?.answerComments).toHaveLength(2)
   })
 })
