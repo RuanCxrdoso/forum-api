@@ -26,6 +26,8 @@ describe('Create question test', () => {
         content: 'Precio saber como resolver integrais.',
       }),
     )
-    expect(questionRepository.questions[0]?.attachments).toHaveLength(2)
+    expect(
+      questionRepository.questions[0]?.attachments.currentItems,
+    ).toHaveLength(2)
   })
 })
