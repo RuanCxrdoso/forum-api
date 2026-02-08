@@ -12,13 +12,12 @@ describe('Create question test', () => {
   })
 
   it('should be able to create a question', async () => {
-    const fakeQuestion = {
-      authorId: 'author-1',
+    await sut.execute({
+      authorId: '1',
       title: 'Como resolver integrais',
       content: 'Precio saber como resolver integrais.',
-    }
-
-    await sut.execute(fakeQuestion)
+      attachmentsIds: ['1', '2'],
+    })
 
     expect(questionRepository.questions[0]?.id).toBeTruthy()
     expect(questionRepository.questions[0]).toEqual(
@@ -27,5 +26,6 @@ describe('Create question test', () => {
         content: 'Precio saber como resolver integrais.',
       }),
     )
+    expect(questionRepository.questions[0]?.attachments).toHaveLength(2)
   })
 })
