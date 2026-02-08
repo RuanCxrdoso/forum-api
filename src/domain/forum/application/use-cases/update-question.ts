@@ -55,7 +55,7 @@ export class UpdateQuestionUseCase {
       currentQuestionAttachments,
     )
 
-    // Crio um novo array de questionAttachments com os novos attachments enviados pelo usuario
+    // Crio um novo array de questionAttachments com os novos attachments enviados pelo usuario e salvo o que preciso ser criado e o que precisa ser deletado na watched list
     const questionAttachments = attachmentsIds.map((attachmentId) => {
       return QuestionAttachment.create({
         questionId: question.id,
