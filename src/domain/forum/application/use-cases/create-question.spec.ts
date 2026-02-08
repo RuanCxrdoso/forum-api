@@ -12,13 +12,14 @@ describe('Create question test', () => {
   })
 
   it('should be able to create a question', async () => {
-    await sut.execute({
+    const result = await sut.execute({
       authorId: '1',
       title: 'Como resolver integrais',
       content: 'Precio saber como resolver integrais.',
       attachmentsIds: ['1', '2'],
     })
 
+    expect(result.isRight()).toBe(true)
     expect(questionRepository.questions[0]?.id).toBeTruthy()
     expect(questionRepository.questions[0]).toEqual(
       expect.objectContaining({
