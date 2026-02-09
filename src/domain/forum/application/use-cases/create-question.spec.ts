@@ -1,25 +1,31 @@
 import { InMemoryQuestionRepository } from '../../../../../test/repositories/in-memory-question-repository.js'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { CreateQuestionUseCase } from './create-question.js'
+import { InMemoryQuestionAttachmentsRepository } from '../../../../../test/repositories/in-memory-question-attachments-repository.js'
+import { UniqueEntityId } from '@/core/entities/unique-entity-id.js'
 
 let questionRepository: InMemoryQuestionRepository
+let questionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
 let sut: CreateQuestionUseCase
 
 describe('Create question test', () => {
   beforeEach(() => {
-    questionRepository = new InMemoryQuestionRepository()
+    questionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository()
+    questionRepository = new InMemoryQuestionRepository(
+      questionAttachmentsRepository,
+    )
     sut = new CreateQuestionUseCase(questionRepository)
   })
 
   it('should be able to create a question', async () => {
-    const fakeQuestion = {
-      authorId: 'author-1',
+    const result = await sut.execute({
+      authorId: '1',
       title: 'Como resolver integrais',
       content: 'Precio saber como resolver integrais.',
-    }
+      attachmentsIds: ['1', '2'],
+    })
 
-    await sut.execute(fakeQuestion)
-
+    expect(result.isRight()).toBe(true)
     expect(questionRepository.questions[0]?.id).toBeTruthy()
     expect(questionRepository.questions[0]).toEqual(
       expect.objectContaining({
@@ -27,5 +33,16 @@ describe('Create question test', () => {
         content: 'Precio saber como resolver integrais.',
       }),
     )
+    expect(
+      questionRepository.questions[0]?.attachments.currentItems,
+    ).toHaveLength(2)
+    expect(questionRepository.questions[0]?.attachments.currentItems).toEqual([
+      expect.objectContaining({
+        attachmentId: new UniqueEntityId('1'),
+      }),
+      expect.objectContaining({
+        attachmentId: new UniqueEntityId('2'),
+      }),
+    ])
   })
 })

@@ -3,13 +3,16 @@ import { makeAnswer } from '../../../../../test/factories/make-answer.js'
 import { InMemoryAnswersRepository } from '../../../../../test/repositories/in-memory-answers-repository.js'
 import { FetchQuestionAnswersUseCase } from './fetch-question-answers.js'
 import { makeQuestion } from '../../../../../test/factories/make-question.js'
+import { InMemoryAnswerAttachmentsRepository } from '../../../../../test/repositories/in-memory-answer-attachments-repository.js'
 
+let answerAttachmentRepository: InMemoryAnswerAttachmentsRepository
 let answerRepository: InMemoryAnswersRepository
 let sut: FetchQuestionAnswersUseCase
 
 describe('Fetch question answers use-case test', () => {
   beforeEach(() => {
-    answerRepository = new InMemoryAnswersRepository()
+    answerAttachmentRepository = new InMemoryAnswerAttachmentsRepository()
+    answerRepository = new InMemoryAnswersRepository(answerAttachmentRepository)
     sut = new FetchQuestionAnswersUseCase(answerRepository)
   })
 
