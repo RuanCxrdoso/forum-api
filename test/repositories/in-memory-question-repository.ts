@@ -1,12 +1,19 @@
 import type { PaginationParams } from '@/core/repositories/pagination-params.js'
+import type { IQuestionAttachmentsRepository } from '@/domain/forum/application/repositories/question-attachments-repository.js'
 import type { IQuestionRepository } from '@/domain/forum/application/repositories/question-repository.js'
 import { Question } from '@/domain/forum/enterprise/entities/question.js'
 
 export class InMemoryQuestionRepository implements IQuestionRepository {
   public questions: Question[] = []
 
+  constructor(
+    private questionAttachmentsRepository: IQuestionAttachmentsRepository,
+  ) {}
+
   async create(question: Question) {
     this.questions.push(question)
+
+    // this.questionAttachmentsRepository.createMany(question.attachments.getItems())
 
     return question
   }
@@ -14,6 +21,10 @@ export class InMemoryQuestionRepository implements IQuestionRepository {
   async delete(question: Question) {
     this.questions = this.questions.filter(
       (questionItem) => questionItem.id !== question.id,
+    )
+
+    this.questionAttachmentsRepository.deleteManyByQuestionId(
+      question.id.toString(),
     )
   }
 
