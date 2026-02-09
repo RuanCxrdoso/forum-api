@@ -7,14 +7,14 @@ import { NotAllowedError } from './errors/not-allowed-error.js'
 import { InMemoryAnswerAttachmentsRepository } from '../../../../../test/repositories/in-memory-answer-attachments-repository.js'
 import { makeAnswerAttachment } from '../../../../../test/factories/make-answer-attachment.js'
 
-let answerRepository: InMemoryAnswersRepository
 let answerAttachmentRepository: InMemoryAnswerAttachmentsRepository
+let answerRepository: InMemoryAnswersRepository
 let sut: UpdateAnswerUseCase
 
 describe('Update answer use case tests', () => {
   beforeEach(() => {
-    answerRepository = new InMemoryAnswersRepository()
     answerAttachmentRepository = new InMemoryAnswerAttachmentsRepository()
+    answerRepository = new InMemoryAnswersRepository(answerAttachmentRepository)
     sut = new UpdateAnswerUseCase(answerRepository, answerAttachmentRepository)
   })
 

@@ -3,9 +3,14 @@ import type {
   IAnswersRepository,
 } from '@/domain/forum/application/repositories/answers-repository.js'
 import type { Answer } from '../../src/domain/forum/enterprise/entities/answer.js'
+import type { IAnswerAttachmentsRepository } from '@/domain/forum/application/repositories/answer-attachments-repository.js'
 
 export class InMemoryAnswersRepository implements IAnswersRepository {
   public answers: Answer[] = []
+
+  constructor(
+    public answerAttachmentsRepository: IAnswerAttachmentsRepository,
+  ) {}
 
   async create(answer: Answer) {
     this.answers.push(answer)
@@ -27,6 +32,7 @@ export class InMemoryAnswersRepository implements IAnswersRepository {
     const answerIndex = this.answers.findIndex((item) => item.id === answer.id)
 
     this.answers.splice(answerIndex, 1)
+    this.answerAttachmentsRepository.deleteManyByAnswerId(answer.id.toString())
 
     return
   }

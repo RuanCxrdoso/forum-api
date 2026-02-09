@@ -6,15 +6,23 @@ import { makeQuestion } from '../../../../../test/factories/make-question.js'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id.js'
 import { makeAnswer } from '../../../../../test/factories/make-answer.js'
 import { NotAllowedError } from './errors/not-allowed-error.js'
+import { InMemoryQuestionAttachmentsRepository } from '../../../../../test/repositories/in-memory-question-attachments-repository.js'
+import { InMemoryAnswerAttachmentsRepository } from '../../../../../test/repositories/in-memory-answer-attachments-repository.js'
 
+let answerAttachmentRepository: InMemoryAnswerAttachmentsRepository
+let questionAttachmentRepository: InMemoryQuestionAttachmentsRepository
 let questionRepository: InMemoryQuestionRepository
 let answerRepository: InMemoryAnswersRepository
 let sut: ChooseQuestionBestAnswerUseCase
 
 describe('Choose question best answer tests', () => {
   beforeEach(() => {
-    questionRepository = new InMemoryQuestionRepository()
-    answerRepository = new InMemoryAnswersRepository()
+    questionAttachmentRepository = new InMemoryQuestionAttachmentsRepository()
+    answerAttachmentRepository = new InMemoryAnswerAttachmentsRepository()
+    questionRepository = new InMemoryQuestionRepository(
+      questionAttachmentRepository,
+    )
+    answerRepository = new InMemoryAnswersRepository(answerAttachmentRepository)
     sut = new ChooseQuestionBestAnswerUseCase(
       answerRepository,
       questionRepository,
