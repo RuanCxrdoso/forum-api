@@ -15,8 +15,10 @@ let sut: UpdateQuestionUseCase
 
 describe('Update question Use Case test', () => {
   beforeEach(() => {
-    questionRepository = new InMemoryQuestionRepository()
     questionAttachmentRepository = new InMemoryQuestionAttachmentsRepository()
+    questionRepository = new InMemoryQuestionRepository(
+      questionAttachmentRepository,
+    )
     sut = new UpdateQuestionUseCase(
       questionRepository,
       questionAttachmentRepository,

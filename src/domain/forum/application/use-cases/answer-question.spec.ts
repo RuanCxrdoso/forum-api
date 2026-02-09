@@ -5,6 +5,7 @@ import { Question } from '../../enterprise/entities/question.js'
 import { AnswerQuestionUseCase } from './answer-question.js'
 import { InMemoryAnswersRepository } from '../../../../../test/repositories/in-memory-answers-repository.js'
 import { Slug } from '../../enterprise/entities/value-objects/slug.js'
+import { UniqueEntityId } from '@/core/entities/unique-entity-id.js'
 
 let answerRepository: InMemoryAnswersRepository
 
@@ -30,9 +31,21 @@ describe('Answer question tests', () => {
       instructorId: instructor.id,
       questionId: question.id,
       content: 'Faça triceps pulley!',
+      attachmentsIds: ['1', '2'],
     })
 
     expect(result.isRight()).toBe(true)
     expect(answerRepository.answers[0]?.id).toEqual(result.value?.answer.id)
+    expect(answerRepository.answers[0]?.attachments.currentItems).toHaveLength(
+      2,
+    )
+    expect(answerRepository.answers[0]?.attachments.currentItems).toEqual([
+      expect.objectContaining({
+        attachmentId: new UniqueEntityId('1'),
+      }),
+      expect.objectContaining({
+        attachmentId: new UniqueEntityId('2'),
+      }),
+    ])
   })
 })
