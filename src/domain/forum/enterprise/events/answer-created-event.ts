@@ -3,7 +3,7 @@ import type { Answer } from '../entities/answer.js'
 
 export class AnswerCreatedEvent implements DomainEvent {
   public ocurredAt: Date
-  private answer: Answer
+  public answer: Answer
 
   public constructor(answer: Answer) {
     this.answer = answer

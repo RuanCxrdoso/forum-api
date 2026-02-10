@@ -4,6 +4,7 @@ import type {
 } from '@/domain/forum/application/repositories/answers-repository.js'
 import type { Answer } from '../../src/domain/forum/enterprise/entities/answer.js'
 import type { IAnswerAttachmentsRepository } from '@/domain/forum/application/repositories/answer-attachments-repository.js'
+import { DomainEvents } from '@/core/events/domain-events.js'
 
 export class InMemoryAnswersRepository implements IAnswersRepository {
   public answers: Answer[] = []
@@ -15,6 +16,8 @@ export class InMemoryAnswersRepository implements IAnswersRepository {
   async create(answer: Answer) {
     this.answers.push(answer)
 
+    DomainEvents.dispatchEventsForAggregate(answer.id)
+
     return
   }
 
@@ -24,6 +27,8 @@ export class InMemoryAnswersRepository implements IAnswersRepository {
     )
 
     this.answers[findIndex] = answer
+
+    DomainEvents.dispatchEventsForAggregate(answer.id)
 
     return
   }
