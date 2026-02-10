@@ -6,14 +6,14 @@ import {
 import { faker } from '@faker-js/faker'
 
 export function makeNotification(
-  override: Partial<NotificationProps>,
+  override: Partial<NotificationProps> = {},
   id?: UniqueEntityId,
 ) {
   const notification = Notification.create(
     {
       recipientId: new UniqueEntityId(),
-      title: faker.lorem.text(),
-      content: faker.lorem.paragraph(),
+      title: faker.lorem.sentence(3),
+      content: faker.lorem.sentence(8),
       ...override,
     },
     id,

@@ -13,7 +13,7 @@ type ReadNoticationUseCaseResponse = Either<
   object
 >
 
-export class ReadNoticationUseCase {
+export class ReadNotificationUseCase {
   constructor(private notificationsRepository: INotificationsRepository) {}
 
   async execute({
