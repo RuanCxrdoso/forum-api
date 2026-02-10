@@ -12,4 +12,17 @@ export abstract class Entities<Props> {
     this._id = id ?? new UniqueEntityId()
     this.props = props
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public equals(entitiy: Entities<any>) {
+    if (entitiy === this) {
+      return true
+    }
+
+    if (entitiy.id === this._id) {
+      return true
+    }
+
+    return false
+  }
 }
