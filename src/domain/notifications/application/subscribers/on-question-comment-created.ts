@@ -1,10 +1,10 @@
 import { DomainEvents } from '@/core/events/domain-events.js'
 import type { EventHandler } from '@/core/events/event-handler.js'
 import type { IQuestionRepository } from '@/domain/forum/application/repositories/question-repository.js'
-import { AnswerCreatedEvent } from '@/domain/forum/enterprise/events/answer-created-event.js'
+import { QuestionCommentCreatedEvent } from '@/domain/forum/enterprise/events/question-comment-created-event.js'
 import type { SendNotificationUseCase } from '../use-cases/send-notification.js'
 
-export class OnAnswerCreated implements EventHandler {
+export class OnQuestionCommentCreated implements EventHandler {
   constructor(
     private questionRepository: IQuestionRepository,
     private sendNotificationUseCase: SendNotificationUseCase,
@@ -12,25 +12,25 @@ export class OnAnswerCreated implements EventHandler {
     this.setupSubscriptions()
   }
 
-  setupSubscriptions() {
+  public async setupSubscriptions() {
     DomainEvents.register(
-      this.sendCreatedNewAnswerEventNotification.bind(this),
-      AnswerCreatedEvent.name,
+      this.questionCommentCreatedSendNotification.bind(this),
+      QuestionCommentCreatedEvent.name,
     )
   }
 
-  private async sendCreatedNewAnswerEventNotification({
-    answer,
-  }: AnswerCreatedEvent) {
+  private async questionCommentCreatedSendNotification({
+    questionComment,
+  }: QuestionCommentCreatedEvent) {
     const question = await this.questionRepository.findById(
-      answer.questionId.toString(),
+      questionComment.questionId.toString(),
     )
 
     if (question) {
       await this.sendNotificationUseCase.execute({
         recipientId: question.authorId.toString(),
-        title: `Nova resposta em ${question.title.substring(0, 40).concat('...')}`,
-        content: `${answer.excerpt}`,
+        title: `Um novo comentário foi adicionado à sua pergunta ${question.title.substring(0, 40).concat('...')}`,
+        content: `Novo comentário: ${questionComment.content.substring(0, 200).concat('...')}`,
       })
     }
   }
