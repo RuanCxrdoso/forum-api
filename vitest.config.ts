@@ -10,6 +10,9 @@ export default defineConfig({
         test: {
           name: 'unit',
           include: [
+            'src/core/events/**/*.spec.ts',
+            'src/domain/notifications/application/use-cases/**/*.spec.ts',
+            'src/domain/notifications/application/subscribers/**/*.spec.ts',
             'src/domain/forum/application/use-cases/**/*.spec.ts',
             'src/domain/forum/enterprise/entities/value-objects/**/*.spec.ts',
           ],

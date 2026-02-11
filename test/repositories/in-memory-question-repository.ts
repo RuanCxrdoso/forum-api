@@ -1,3 +1,4 @@
+import { DomainEvents } from '@/core/events/domain-events.js'
 import type { PaginationParams } from '@/core/repositories/pagination-params.js'
 import type { IQuestionAttachmentsRepository } from '@/domain/forum/application/repositories/question-attachments-repository.js'
 import type { IQuestionRepository } from '@/domain/forum/application/repositories/question-repository.js'
@@ -14,7 +15,6 @@ export class InMemoryQuestionRepository implements IQuestionRepository {
     this.questions.push(question)
 
     // this.questionAttachmentsRepository.createMany(question.attachments.getItems())
-
     return question
   }
 
@@ -34,6 +34,8 @@ export class InMemoryQuestionRepository implements IQuestionRepository {
     )
 
     this.questions[questionIndex] = question
+
+    DomainEvents.dispatchEventsForAggregate(question.id)
   }
 
   async findBySlug(slug: string) {
